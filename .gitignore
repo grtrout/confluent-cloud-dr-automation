@@ -1,3 +1,5 @@
+# Terraform
+
 # Local .terraform directories
 **/.terraform/*
 
@@ -35,3 +37,37 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
+
+# Python
+
+# Byte-compiled files
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+
+# Virtual environment
+venv/
+.env/
+
+# Environment files
+*.env
+*.env.*
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Cache
+*.egg-info/
+.eggs/
+*.cache
+*.pytest_cache/
+.pytest_cache/
+
+# Logs
+*.log
+
+# IDEs and editors
+.vscode/
+.idea/
+.DS_Store
