@@ -2,7 +2,7 @@
 # Variables Declaration
 ###############################################################################
 # This file defines all variables used throughout the Terraform configuration.
-# Variables with default values represent current resource settings in main.tf.
+# Variables with default values represent current resource settings. 
 # Sensitive variables are marked to prevent accidental exposure.
 ###############################################################################
 
@@ -21,8 +21,6 @@ variable "confluent_cloud_api_secret" {
 ###############################################################################
 # Environment Configuration
 ###############################################################################
-# Variables for creating East and West environments in Confluent Cloud.
-
 variable "east_env_display_name" {
   description = "Display name for the East Confluent Cloud environment."
   type        = string
@@ -44,8 +42,6 @@ variable "stream_governance_package" {
 ###############################################################################
 # Kafka Cluster Configuration
 ###############################################################################
-# Variables for Kafka clusters, including display names, regions, and CKUs.
-
 variable "cloud_provider" {
   description = "Cloud provider for Kafka clusters (e.g., AWS, GCP, AZURE)."
   type        = string
@@ -65,7 +61,7 @@ variable "west_region" {
 }
 
 variable "availability" {
-  description = "Availability zone configuration for Kafka clusters (e.g., SINGLE_ZONE, MULTI_ZONE)."
+  description = "Availability zone configuration (SINGLE_ZONE or MULTI_ZONE)."
   type        = string
   default     = "SINGLE_ZONE"
 }
@@ -97,8 +93,6 @@ variable "cku_west" {
 ###############################################################################
 # Cluster Link Configuration
 ###############################################################################
-# Variable for the bidirectional cluster link between East and West clusters.
-
 variable "link_name" {
   description = "Name for the bidirectional cluster link."
   type        = string
@@ -108,8 +102,6 @@ variable "link_name" {
 ###############################################################################
 # Kafka Topics Configuration
 ###############################################################################
-# Variables for configuring source topics in East and West clusters.
-
 variable "east_topic_name" {
   description = "Name of the source topic in the East Kafka cluster."
   type        = string
