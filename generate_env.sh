@@ -25,7 +25,7 @@ PYTHON_DIR="$PARENT_DIR/python"
 ENV_FILE="$PYTHON_DIR/.env"
 
 # Configurable variables
-CONSUMER_GROUP="gt-consumer-group"
+CONSUMER_GROUP="demo-dr-consumer-group"
 MESSAGE_INTERVAL="1.0"
 
 # Ensure the Python directory exists

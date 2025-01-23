@@ -101,7 +101,7 @@ if missing_vars:
     print(f"[ERROR] Missing environment variables: {', '.join(missing_vars)}")
     sys.exit(1)
 
-# If CONSUMER_GROUP is not set, you can set a default here if desired
+# If CONSUMER_GROUP is not set, use this default value
 if not CONSUMER_GROUP:
     CONSUMER_GROUP = "demo-dr-consumer-group"
     print(f"[WARN] 'CONSUMER_GROUP' is not set. Using default: {CONSUMER_GROUP}")
