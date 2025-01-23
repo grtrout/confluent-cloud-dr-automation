@@ -1,0 +1,50 @@
+###############################################################################
+# Terraform Variables File
+###############################################################################
+# Provides concrete values for all variables defined in variables.tf. Sensitive 
+# values like API secrets should be handled securely and never committed 
+# to public repositories.
+#
+# Instructions:
+# 1. Copy this file to `terraform.tfvars`
+# 2. Replace placeholder values with actual credentials and settings
+###############################################################################
+
+# Confluent Cloud API Credentials with OrganizationAdmin permissions (Required)
+confluent_cloud_api_key     = "YOUR_CONFLUENT_CLOUD_API_KEY"
+confluent_cloud_api_secret  = "YOUR_CONFLUENT_CLOUD_API_SECRET"
+
+# Confluent Cloud Environments
+east_env_display_name      = "east-environment"
+west_env_display_name      = "west-environment"
+
+# Stream Governance Package
+stream_governance_package  = "ADVANCED"  # [ESSENTIALS, ADVANCED]
+
+# Cloud Provider
+cloud_provider             = "AWS"  # [AWS, AZURE, GCP]
+
+# AWS Regions
+east_region                = "us-east-2"
+west_region                = "us-west-2"
+
+# Cluster Availability
+availability               = "SINGLE_ZONE"  # [SINGLE_ZONE, MULTI_ZONE]
+
+# Kafka Cluster Display Names
+east_cluster_display_name  = "east-cluster"
+west_cluster_display_name  = "west-cluster"
+
+# CKUs (Confluent Kafka Units)
+cku_east                   = 1
+cku_west                   = 1
+
+# Cluster Link
+link_name                  = "dr-bidirectional-link"
+
+# Kafka Topics
+east_topic_name            = "topic-on-east"
+west_topic_name            = "topic-on-west"
+
+# Partition Count
+default_partition_count    = 3  # Number of partitions per topic

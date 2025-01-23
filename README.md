@@ -37,7 +37,11 @@ This repository contains **Terraform configurations** that automate the setup of
    ```
 
 3. **Configure Variables**:
-   Review or edit `terraform.tfvars` (or set environment variables) to supply credentials and custom settings (e.g., cluster names, regions).
+   Copy the example variable file and update it with your Confluent Cloud details:
+   ```bash
+   cp terraform/terraform.tfvars.example terraform/terraform.tfvars
+   ```
+   Edit `terraform/terraform.tfvars` to set your API keys, regions, and cluster settings. Ensure that the provided API key has **OrganizationAdmin** permissions to allow Terraform to create and manage all required resources.
 
 4. **Review the execution plan**:
    ```bash
@@ -66,11 +70,12 @@ After Terraform completes, you can run an **optional script** (e.g., `generate_e
    ./generate_envs.sh
    # Follow the prompts to select an environment (1 for East, 2 for West, or exit)
    ```
-2. **Check Generated Files**:
+2. **Review Generated Files**:
    ```bash
-   ls python/east.env
-   ls python/west.env
+   cat python/east.env
+   cat python/west.env
    ```
+Ensure that the values for `BOOTSTRAP_SERVER`, `SASL_USERNAME`, `SASL_PASSWORD`, and other required variables are correctly populated.
 
 ### Running the Producer & Consumer
 
@@ -113,5 +118,5 @@ Both methods are valid.
 
 ## Planned Enhancements
 
-- **Application Demo**: Incorporate more advanced failover/failback scripts to simulate region outages, reverse mirror topics, and forcibly fail over if needed.
+- **Advanced DR Demonstration**: Develop scripts to simulate regional outages and demonstrate automated failover and failback processes.
 
