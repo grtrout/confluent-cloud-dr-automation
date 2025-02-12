@@ -1,122 +1,116 @@
 # Confluent Cloud Disaster Recovery Automation
 
-This repository contains **Terraform configurations** that automate the setup of a **Disaster Recovery (DR)** environment in **Confluent Cloud**. It provisions all necessary components including environments, Kafka clusters, Schema Registries, service accounts, API keys, and cluster links across multiple regions, ensuring a complete DR solution from scratch.
+This repository automates the setup and management of a multi-region Kafka disaster recovery (DR) environment on Confluent Cloud. Using Terraform to provision clusters, Schema Registries, service accounts, API keys, and more, it provides automated scripts for failover, failback, status checking, and outage simulation.
 
 ## Key Features
 
-- **Modular Configuration**: Terraform code is organized into separate `.tf` files (`providers.tf`, `environments.tf`, `clusters.tf`, etc.) to keep each concern (e.g., Kafka clusters, service accounts, role bindings) logically separated and more maintainable.
-- **From-Scratch Deployment**: Running `terraform apply` spins up a fully functional Confluent Cloud DR setup. A subsequent `terraform destroy` removes all resources cleanly.
-- **Multi-Region Support**: The configuration provisions resources in two regions to facilitate disaster recovery scenarios.
-- **Schema Registry Readiness**: Includes a short delay to ensure Schema Registry instances are fully online before subsequent resources depend on them.
-- **Flexible Environment Selection for Python Apps**: Producer/Consumer Python scripts can run with no arguments (default `.env`) or a single argument (`east` or `west`) to load the respective environment configuration.
+- **Fully Automated DR Setup:**  
+  Deploy a multi-region disaster recovery environment with a single `terraform apply`.
 
-## Usage
+- **Modular Terraform Configurations:**  
+  Organized Terraform files (e.g., `providers.tf`, `environments.tf`, `clusters.tf`, etc.) that separate concerns and simplify maintenance.
 
-### Prerequisites
+- **Automated DR Operations:**  
+  - **Failover:** Switch the primary cluster from East to West using `dr_failover.sh`.  
+  - **Failback:** Revert the primary cluster from West back to East using `dr_failback.sh`.  
+  - **Status Check:** Use `dr_status.sh` to display mirror topic statuses and simulated outages.  
+  - **Outage Simulation & Restoration:** Simulate cluster outages via DENY ACLs with `simulate_outage.sh` and restore normal access with `restore_access.sh`.
 
-1. **Terraform** installed on your local machine or CI environment.  
-   Download it from: https://www.terraform.io/downloads.html  
-2. **Confluent Cloud API credentials** (API Key and Secret) with appropriate `OrganizationAdmin` permissions.
-3. **Python dependencies**  
-   Install the required Python packages using the following command:  
+- **Dynamic Client Configuration:**  
+  Example Python applications (producer and consumer) load region-specific configuration from environment files (`east.env` and `west.env`), which can be generated via `generate_env.sh`.
+
+## Prerequisites
+
+- [Terraform](https://www.terraform.io/downloads.html)
+- Confluent Cloud API credentials with OrganizationAdmin permissions.
+- [Confluent CLI](https://docs.confluent.io/confluent-cli/current/install.html) (logged in via `confluent login`).
+- Python 3 and required packages:
+  ```bash
+  pip install "confluent-kafka[avro]" "python-dotenv"
+  ```
+
+## Setup & Deployment
+
+1. **Clone the Repository:**
    ```bash
-   pip install "confluent-kafka[avro]" "python-dotenv"
-   ```
-
-### Steps
-
-1. **Clone this repository**:
-   ```bash
-   git clone https://github.com/grtrout/confluent-cloud-dr-automation confluent-cloud-dr-automation
+   git clone https://github.com/grtrout/confluent-cloud-dr-automation.git
    cd confluent-cloud-dr-automation
    ```
 
-2. **Initialize Terraform**:
-   ```bash
-   terraform init
-   ```
+2. **Configure Terraform:**
+   - Copy and update the example variables file:
+     ```bash
+     cp terraform/terraform.tfvars.example terraform/terraform.tfvars
+     ```
+   - Edit the file with your Confluent Cloud details (API keys, regions, cluster settings).
 
-3. **Configure Variables**:
-   Copy the example variable file and update it with your Confluent Cloud details:
-   ```bash
-   cp terraform/terraform.tfvars.example terraform/terraform.tfvars
-   ```
-   Edit `terraform/terraform.tfvars` to set your API keys, regions, and cluster settings. Ensure that the provided API key has **OrganizationAdmin** permissions to allow Terraform to create and manage all required resources.
+3. **Deploy the Environment:**
+   - Initialize Terraform:
+     ```bash
+     terraform init
+     ```
+   - Review the plan:
+     ```bash
+     terraform plan
+     ```
+   - Apply the configuration:
+     ```bash
+     terraform apply
+     ```
+   - To tear down later:
+     ```bash
+     terraform destroy
+     ```
 
-4. **Review the execution plan**:
-   ```bash
-   terraform plan
-   ```
-   This command generates and displays a detailed plan of all the resources that Terraform will create, modify, or destroy. Review the plan to ensure accuracy before proceeding.
+4. **Generate Environment Files:**
+   - Create `east.env` and `west.env` with:
+     ```bash
+     ./generate_env.sh
+     ```
+   - Optionally, activate one environment as the default `.env` when prompted.
 
-5. **Apply the Configuration**:
-   ```bash
-   terraform apply
-   ```
-   Terraform will display the execution plan again and prompt you to confirm. Type `yes` to proceed with the creation of resources.
+## Disaster Recovery Operations
 
-6. **Destroy the Infrastructure (when no longer needed)**:
-   ```bash
-   terraform destroy
-   ```
-   This removes all Confluent Cloud resources previously created.
+Use the provided scripts to manage DR activities:
 
-### Generate Environment Files
+- **Failover to West:**
+  ```bash
+  ./dr_failover.sh
+  ```
+- **Failback to East:**
+  ```bash
+  ./dr_failback.sh
+  ```
+- **Check DR Status:**
+  ```bash
+  ./dr_status.sh
+  ```
+- **Simulate Outage:**
+  ```bash
+  ./simulate_outage.sh
+  ```
+- **Restore Access:**
+  ```bash
+  ./restore_access.sh
+  ```
 
-After Terraform completes, you can run an **optional script** (e.g., `generate_envs.sh`) to create `east.env` and `west.env` from Terraform outputs. These files contain the Kafka/SR credentials for each region.
+Each script includes interactive prompts and clear instructions for execution.
 
-1. **Run Script** (example):
-   ```bash
-   ./generate_envs.sh
-   # Follow the prompts to select an environment (1 for East, 2 for West, or exit)
-   ```
-2. **Review Generated Files**:
-   ```bash
-   cat python/east.env
-   cat python/west.env
-   ```
-Ensure that the values for `BOOTSTRAP_SERVER`, `SASL_USERNAME`, `SASL_PASSWORD`, and other required variables are correctly populated.
+## Python Example Applications
 
-### Running the Producer & Consumer
+In the `python/` directory, you’ll find sample apps:
 
-Inside the `python/` directory, you have two example scripts:
+- **Producer:** `avro_producer_app.py`
+- **Consumer:** `avro_consumer_app.py`
 
-1. `avro_producer_app.py`  
-2. `avro_consumer_app.py`
-
-**Each script can be run** in one of two ways:
-
-- **No argument** → Defaults to `.env`
-- **Single argument** (`east` or `west`) → Loads `east.env` or `west.env`
-
+Run them with no arguments (to use the default `.env`) or with an argument (`east` or `west`) to explicitly load that environment:
 ```bash
-# 1) Default usage (reads .env)
-python avro_producer_app.py
-python avro_consumer_app.py
-
-# 2) East usage (explicitly load east.env)
 python avro_producer_app.py east
 python avro_consumer_app.py east
-
-# 3) West usage (explicitly load west.env)
-python avro_producer_app.py west
-python avro_consumer_app.py west
 ```
 
-Alternatively, you can manually copy:
-```bash
-cp python/east.env python/.env
-python avro_producer_app.py
-```
-Both methods are valid.
+## Notes
 
-### Notes
-
-- Sensitive information (like API secrets) should be placed in `.tfvars` or environment variables and never committed to version control.
-- The directory structure is designed to be easily extended with additional `.tf` files or modules for networking, Kafka applications, or other integrations.
-- If you modify `avro_producer_app.py` or `avro_consumer_app.py` to be executable (`chmod +x`), ensure they have a proper shebang (`#!/usr/bin/env python3`) at the top.
-
-## Planned Enhancements
-
-- **Advanced DR Demonstration**: Develop scripts to simulate regional outages and demonstrate automated failover and failback processes.
+- **Security:** Ensure sensitive files (like `.tfvars` and environment files) are not committed to version control.
+- **Extensibility:** The project structure is designed to be easily extended with additional Terraform modules or application integrations.
 
