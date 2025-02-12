@@ -99,6 +99,12 @@ variable "link_name" {
   default     = "bidirectional-link"
 }
 
+variable "consumer_offset_sync_ms" {
+  description = "Time interval for consumer offset synchronization."
+  type        = number
+  default     = 5000
+}
+
 ###############################################################################
 # Kafka Topics Configuration
 ###############################################################################
@@ -106,12 +112,6 @@ variable "east_topic_name" {
   description = "Name of the source topic in the East Kafka cluster."
   type        = string
   default     = "public.topic-on-east"
-}
-
-variable "west_topic_name" {
-  description = "Name of the source topic in the West Kafka cluster."
-  type        = string
-  default     = "public.topic-on-west"
 }
 
 variable "default_partition_count" {

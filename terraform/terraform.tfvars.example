@@ -41,10 +41,10 @@ cku_west                   = 1
 
 # Cluster Link
 link_name                  = "dr-bidirectional-link"
+consumer_offset_sync_ms    = 5000 
 
-# Kafka Topics
+# Kafka Topic
 east_topic_name            = "topic-on-east"
-west_topic_name            = "topic-on-west"
 
 # Partition Count
 default_partition_count    = 3  # Number of partitions per topic

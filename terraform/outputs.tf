@@ -146,6 +146,16 @@ output "cluster_link_west_to_east_name" {
   value       = confluent_cluster_link.west_to_east.link_name
 }
 
+output "consumer_offset_sync_ms_east_to_west" {
+  description = "Time interval for consumer offset synchronization (East to West)"
+  value       = confluent_cluster_link.east_to_west.config["consumer.offset.sync.ms"]
+}
+
+output "consumer_offset_sync_ms_west_to_east" {
+  description = "Time interval for consumer offset synchronization (West to East)"
+  value       = confluent_cluster_link.west_to_east.config["consumer.offset.sync.ms"]
+}
+
 #######################################
 # Kafka Topics Outputs
 #######################################
@@ -154,22 +164,12 @@ output "east_topic_name" {
   value       = confluent_kafka_topic.topic_east.topic_name
 }
 
-output "west_topic_name" {
-  description = "Name of the source Kafka topic in the West cluster"
-  value       = confluent_kafka_topic.topic_west.topic_name
-}
-
 #######################################
 # Mirror Topics Outputs
 #######################################
 output "mirror_topic_from_east_name" {
   description = "Name of the mirror topic in the West cluster that mirrors the East source topic"
   value       = confluent_kafka_mirror_topic.from_east.mirror_topic_name
-}
-
-output "mirror_topic_from_west_name" {
-  description = "Name of the mirror topic in the East cluster that mirrors the West source topic"
-  value       = confluent_kafka_mirror_topic.from_west.mirror_topic_name
 }
 
 ###############################################################################

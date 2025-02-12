@@ -18,15 +18,3 @@ resource "confluent_kafka_topic" "topic_east" {
   }
 }
 
-resource "confluent_kafka_topic" "topic_west" {
-  kafka_cluster {
-    id = confluent_kafka_cluster.west_cluster.id
-  }
-  topic_name       = var.west_topic_name
-  partitions_count = var.default_partition_count
-  rest_endpoint    = confluent_kafka_cluster.west_cluster.rest_endpoint
-  credentials {
-    key    = confluent_api_key.admin_west_api_key.id
-    secret = confluent_api_key.admin_west_api_key.secret
-  }
-}
